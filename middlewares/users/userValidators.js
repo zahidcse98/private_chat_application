@@ -1,19 +1,19 @@
-//external imports
+// external imports
 const { check, validationResult } = require("express-validator");
 const createError = require("http-errors");
 const path = require("path");
 const { unlink } = require("fs");
 
-//internal imports
+// internal imports
 const User = require("../../models/People");
 
-//add user
+// add user
 const addUserValidators = [
   check("name")
     .isLength({ min: 1 })
-    .withMessage("Name is Required")
+    .withMessage("Name is required")
     .isAlpha("en-US", { ignore: " -" })
-    .withMessage("Name must not contain anything than alphabet")
+    .withMessage("Name must not contain anything other than alphabet")
     .trim(),
   check("email")
     .isEmail()
@@ -23,7 +23,7 @@ const addUserValidators = [
       try {
         const user = await User.findOne({ email: value });
         if (user) {
-          throw createError("Email already in use");
+          throw createError("Email already is use!");
         }
       } catch (err) {
         throw createError(err.message);
@@ -38,7 +38,7 @@ const addUserValidators = [
       try {
         const user = await User.findOne({ mobile: value });
         if (user) {
-          throw createError("Mobile is already in use!!");
+          throw createError("Mobile already is use!");
         }
       } catch (err) {
         throw createError(err.message);
@@ -47,7 +47,7 @@ const addUserValidators = [
   check("password")
     .isStrongPassword()
     .withMessage(
-      "Password must be contain at least 8 characters ling & should contain 1 lowercase, 1 uppercase, 1 number & 1 symbol"
+      "Password must be at least 8 characters long & should contain at least 1 lowercase, 1 uppercase, 1 number & 1 symbol"
     ),
 ];
 
@@ -57,7 +57,7 @@ const addUserValidationHandler = function (req, res, next) {
   if (Object.keys(mappedErrors).length === 0) {
     next();
   } else {
-    //remove upload files
+    // remove uploaded files
     if (req.files.length > 0) {
       const { filename } = req.files[0];
       unlink(
@@ -68,11 +68,13 @@ const addUserValidationHandler = function (req, res, next) {
       );
     }
 
+    // response the errors
     res.status(500).json({
       errors: mappedErrors,
     });
   }
 };
+
 module.exports = {
   addUserValidators,
   addUserValidationHandler,

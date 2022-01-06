@@ -1,8 +1,8 @@
-//external imports
+// external imports
 const express = require("express");
 const { check } = require("express-validator");
 
-//internal imports
+// internal imports
 const {
   getUsers,
   addUser,
@@ -14,14 +14,15 @@ const {
   addUserValidators,
   addUserValidationHandler,
 } = require("../middlewares/users/userValidators");
+
 const { checkLogin } = require("../middlewares/common/checkLogin");
 
 const router = express.Router();
 
-//users page
+// users page
 router.get("/", decorateHtmlResponse("Users"), checkLogin, getUsers);
 
-//add users
+// add user
 router.post(
   "/",
   checkLogin,
@@ -31,7 +32,7 @@ router.post(
   addUser
 );
 
-//remove user
+// remove user
 router.delete("/:id", removeUser);
 
 module.exports = router;
